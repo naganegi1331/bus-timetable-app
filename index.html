@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バス時刻表アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>バス時刻表</h1>
+            <div class="current-time">
+                <div id="current-date"></div>
+                <div id="current-time"></div>
+            </div>
+            <button id="refresh-btn">更新</button>
+        </header>
+        
+        <main>
+            <div class="routes-container" id="routes-container">
+                <!-- Bus routes will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バス時刻表 CSV変換ツール</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .output {
+            margin-top: 20px;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .instructions p, .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>バス時刻表 CSV変換ツール</h1>
+    
+    <div class="container">
+        <div class="form-group">
+            <label for="csv-format">CSVフォーマット選択:</label>
+            <select id="csv-format">
+                <option value="simple">シンプル形式（路線ごとに1ファイル）</option>
+                <option value="complex">複合形式（複数路線を1ファイルに）</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="route-info">路線情報:</label>
+            <input type="text" id="route-id" placeholder="路線ID（例: 1）" style="width: 100px; padding: 5px; margin-right: 10px;">
+            <input type="text" id="route-name" placeholder="路線名（例: 駅前 → 市役所）" style="width: 200px; padding: 5px; margin-right: 10px;">
+            <input type="text" id="route-description" placeholder="説明（例: 中央駅から市役所経由）" style="width: 250px; padding: 5px;">
+        </div>
+        
+        <div class="form-group">
+            <label for="csv-input">CSVデータ入力:</label>
+            <textarea id="csv-input" placeholder="CSVデータをここに貼り付けてください"></textarea>
+        </div>
+        
+        <button id="convert-btn">変換</button>
+        
+        <div class="output">
+            <label for="js-output">JavaScript出力:</label>
+            <textarea id="js-output" readonly></textarea>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h3>使い方</h3>
+        <p>このツールは、CSVフォーマットのバス時刻表データをJavaScriptオブジェクト形式に変換します。</p>
+        
+        <h4>シンプル形式のCSV例（路線ごとに1ファイル）:</h4>
+        <pre><code>day_type,departure_times
+weekday,06:30,07:00,07:30,08:00,08:30,09:00
+saturday,07:00,07:30,08:00,08:30,09:00,09:30
+sunday,08:00,08:30,09:00,09:30,10:00,10:30</code></pre>
+        
+        <h4>複合形式のCSV例（複数路線を1ファイルに）:</h4>
+        <pre><code>route_id,route_name,route_description,day_type,departure_times
+1,駅前 → 市役所,中央駅から市役所経由,weekday,06:30,07:00,07:30,08:00
+1,駅前 → 市役所,中央駅から市役所経由,saturday,07:00,07:30,08:00,08:30
+1,駅前 → 市役所,中央駅から市役所経由,sunday,08:00,08:30,09:00,09:30
+2,駅前 → 大学,中央駅から大学経由,weekday,07:15,07:45,08:15,08:45</code></pre>
+        
+        <h4>手順:</h4>
+        <ol>
+            <li>CSVフォーマットを選択します</li>
+            <li>シンプル形式の場合は、路線情報を入力します</li>
+            <li>CSVデータを貼り付けます</li>
+            <li>「変換」ボタンをクリックします</li>
+            <li>生成されたJavaScriptコードをコピーして、<code>data.js</code>ファイルに貼り付けます</li>
+        </ol>
+    </div>
+    
+    <script>
+        document.getElementById('convert-btn').addEventListener('click', function() {
+            const format = document.getElementById('csv-format').value;
+            const csvInput = document.getElementById('csv-input').value.trim();
+            const routeId = document.getElementById('route-id').value.trim();
+            const routeName = document.getElementById('route-name').value.trim();
+            const routeDescription = document.getElementById('route-description').value.trim();
+            
+            if (!csvInput) {
+                alert('CSVデータを入力してください');
+                return;
+            }
+            
+            if (format === 'simple' && (!routeId || !routeName)) {
+                alert('路線IDと路線名を入力してください');
+                return;
+            }
+            
+            let jsOutput = '';
+            
+            if (format === 'simple') {
+                jsOutput = convertSimpleFormat(csvInput, routeId, routeName, routeDescription);
+            } else {
+                jsOutput = convertComplexFormat(csvInput);
+            }
+            
+            document.getElementById('js-output').value = jsOutput;
+        });
+        
+        function convertSimpleFormat(csvInput, routeId, routeName, routeDescription) {
+            const lines = csvInput.split('\n');
+            const schedules = {};
+            
+            for (let i = 0; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const parts = lines[i].split(',');
+                const dayType = parts[0].trim();
+                const times = parts.slice(1).map(t => t.trim()).filter(t => t);
+                
+                if (dayType && times.length > 0) {
+                    schedules[dayType] = times;
+                }
+            }
+            
+            const route = {
+                id: parseInt(routeId) || 1,
+                name: routeName,
+                description: routeDescription,
+                schedules: schedules
+            };
+            
+            return `// バス時刻表データ
+const busRoutes = [
+    ${JSON.stringify(route, null, 4)}
+];`;
+        }
+        
+        function convertComplexFormat(csvInput) {
+            const lines = csvInput.split('\n');
+            const routes = {};
+            
+            // ヘッダー行をスキップ
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const parts = lines[i].split(',');
+                const routeId = parts[0].trim();
+                const routeName = parts[1].trim();
+                const routeDescription = parts[2].trim();
+                const dayType = parts[3].trim();
+                const times = parts.slice(4).map(t => t.trim()).filter(t => t);
+                
+                if (!routes[routeId]) {
+                    routes[routeId] = {
+                        id: parseInt(routeId),
+                        name: routeName,
+                        description: routeDescription,
+                        schedules: {}
+                    };
+                }
+                
+                if (dayType && times.length > 0) {
+                    routes[routeId].schedules[dayType] = times;
+                }
+            }
+            
+            const routesArray = Object.values(routes);
+            
+            return `// バス時刻表データ
+const busRoutes = ${JSON.stringify(routesArray, null, 4)};`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 100%;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.current-time {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#current-date {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+#current-time {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+#refresh-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#refresh-btn:hover {
+    background-color: #2980b9;
+}
+
+.routes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.route-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.route-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.route-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.next-departure {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.departure-time {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.minutes-left {
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.minutes-left.soon {
+    background-color: #e74c3c;
+}
+
+.minutes-left.upcoming {
+    background-color: #f39c12;
+}
+
+.minutes-left.later {
+    background-color: #27ae60;
+}
+
+.no-more-buses {
+    color: #7f8c8d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 600px;
+    }
+}
